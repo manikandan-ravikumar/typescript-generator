@@ -76,14 +76,14 @@ public class Emitter implements EmitterExtension.Writer {
             writeNewLine();
             for (ModuleDependency dependency : settings.moduleDependencies) {
                 if (!dependency.global) {
-                    writeIndentedLine("import * as " + dependency.importAs + " from " + quote(dependency.importFrom, settings) + ";");
+                    writeIndentedLine("import * as " + dependency.importAs + " from " + quote(dependency.importFrom, settings) + getTrailingChar());
                 }
             }
         }
         if (settings.importDeclarations != null && !settings.importDeclarations.isEmpty()) {
             writeNewLine();
             for (String importDeclaration : settings.importDeclarations) {
-                writeIndentedLine(importDeclaration + ";");
+                writeIndentedLine(importDeclaration + getTrailingChar());
             }
         }
     }
@@ -212,7 +212,7 @@ public class Emitter implements EmitterExtension.Writer {
         final String readonlyString = property.modifiers.isReadonly ? "readonly " : "";
         final String questionMark = tsType instanceof TsType.OptionalType ? "?" : "";
         final String defaultString = property.getDefaultValue() != null ? " = " + property.getDefaultValue().format(settings) : "";
-        writeIndentedLine(staticString + readonlyString + quoteIfNeeded(property.getName(), settings) + questionMark + ": " + tsType.format(settings) + defaultString + ";");
+        writeIndentedLine(staticString + readonlyString + quoteIfNeeded(property.getName(), settings) + questionMark + ": " + tsType.format(settings) + defaultString + getTrailingChar());
     }
 
     private void emitDecorators(List<TsDecorator> decorators) {
@@ -271,7 +271,7 @@ public class Emitter implements EmitterExtension.Writer {
             indent--;
             writeIndentedLine("}");
         } else {
-            writeIndentedLine(signature + ";");
+            writeIndentedLine(signature + getTrailingChar());
         }
     }
 
@@ -326,7 +326,7 @@ public class Emitter implements EmitterExtension.Writer {
 
     private void emitReturnStatement(TsReturnStatement returnStatement) {
         if (returnStatement.getExpression() != null) {
-            writeIndentedLine("return " + returnStatement.getExpression().format(settings) + ";");
+            writeIndentedLine("return " + returnStatement.getExpression().format(settings) + getTrailingChar());
         } else {
             writeIndentedLine("return;");
         }
@@ -347,7 +347,7 @@ public class Emitter implements EmitterExtension.Writer {
     }
 
     private void emitExpressionStatement(TsExpressionStatement expressionStatement) {
-        writeIndentedLine(expressionStatement.getExpression().format(settings) + ";");
+        writeIndentedLine(expressionStatement.getExpression().format(settings) + getTrailingChar());
     }
 
     private void emitVariableDeclarationStatement(TsVariableDeclarationStatement variableDeclarationStatement) {
@@ -356,7 +356,7 @@ public class Emitter implements EmitterExtension.Writer {
                 + variableDeclarationStatement.getName()
                 + (variableDeclarationStatement.getType() != null ? ": " + variableDeclarationStatement.getType().format(settings) : "")
                 + (variableDeclarationStatement.getInitializer() != null ? " = " + variableDeclarationStatement.getInitializer().format(settings) : "")
-                + ";"
+                + getTrailingChar()
         );
     }
 
@@ -385,7 +385,7 @@ public class Emitter implements EmitterExtension.Writer {
         final String genericParameters = alias.getTypeParameters().isEmpty()
                 ? ""
                 : "<" + formatList(settings, alias.getTypeParameters()) + ">";
-        writeIndentedLine(exportKeyword, "type " + alias.getName().getSimpleName() + genericParameters + " = " + alias.getDefinition().format(settings) + ";");
+        writeIndentedLine(exportKeyword, "type " + alias.getName().getSimpleName() + genericParameters + " = " + alias.getDefinition().format(settings) + getTrailingChar());
     }
 
     private void emitLiteralEnum(TsEnumModel enumModel, boolean exportKeyword, boolean declareKeyword) {
@@ -438,7 +438,7 @@ public class Emitter implements EmitterExtension.Writer {
     private void emitUmdNamespace() {
         if (settings.umdNamespace != null) {
             writeNewLine();
-            writeIndentedLine("export as namespace " + settings.umdNamespace + ";");
+            writeIndentedLine("export as namespace " + settings.umdNamespace + getTrailingChar());
         }
     }
 
@@ -502,4 +502,7 @@ public class Emitter implements EmitterExtension.Writer {
         }
     }
 
+    private String getTrailingChar() {
+        return settings.disableTrailingSemiColon ? "" : ";";
+    }
 }

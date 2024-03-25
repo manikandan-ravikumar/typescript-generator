@@ -136,6 +136,7 @@ public class Settings {
     public boolean jackson2ModuleDiscovery = false;
     public List<Class<? extends Module>> jackson2Modules = new ArrayList<>();
     public ClassLoader classLoader = null;
+    public boolean disableTrailingSemiColon = false;
 
     private boolean defaultStringEnumsOverriddenByExtension = false;
 
@@ -903,5 +904,4 @@ public class Settings {
             default: return 0;
         }
     }
-
 }
