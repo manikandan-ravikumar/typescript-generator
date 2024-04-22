@@ -194,6 +194,7 @@ public class Emitter implements EmitterExtension.Writer {
         for (TsPropertyModel property : bean.getProperties()) {
             emitProperty(property);
         }
+        emitInjectedProperties(bean);
         if (bean.getConstructor() != null) {
             emitCallable(bean.getConstructor());
         }
@@ -213,6 +214,22 @@ public class Emitter implements EmitterExtension.Writer {
         final String questionMark = tsType instanceof TsType.OptionalType ? "?" : "";
         final String defaultString = property.getDefaultValue() != null ? " = " + property.getDefaultValue().format(settings) : "";
         writeIndentedLine(staticString + readonlyString + quoteIfNeeded(property.getName(), settings) + questionMark + ": " + tsType.format(settings) + defaultString + getTrailingChar());
+    }
+
+    private void emitInjectedProperties(TsBeanModel bean) {
+
+        settings.injectCustomProperties
+                .keySet()
+                .stream().map(Class::getSimpleName)
+                .filter(key -> key.equals(bean.getName().getSimpleName()))
+                .findFirst().ifPresent((ignored) -> writeIndentedLine("// custom properties"));
+
+        settings.injectCustomProperties
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().getSimpleName().equals(bean.getName().getSimpleName()))
+                .flatMap(matched -> matched.getValue().stream())
+                .forEach(this::writeIndentedLine);
     }
 
     private void emitDecorators(List<TsDecorator> decorators) {

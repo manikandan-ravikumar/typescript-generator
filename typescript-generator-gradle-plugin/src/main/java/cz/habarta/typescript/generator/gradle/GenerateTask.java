@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Task;
@@ -129,6 +130,8 @@ public class GenerateTask extends DefaultTask {
     public boolean jackson2ModuleDiscovery;
     public List<String> jackson2Modules;
     public Logger.Level loggingLevel;
+    public boolean disableTrailingSemiColon;
+    public Map<Class<?>, List<String>> injectCustomProperties;
 
     private Settings createSettings(URLClassLoader classLoader) {
         final Settings settings = new Settings();
@@ -212,6 +215,8 @@ public class GenerateTask extends DefaultTask {
         settings.jackson2ModuleDiscovery = jackson2ModuleDiscovery;
         settings.loadJackson2Modules(classLoader, jackson2Modules);
         settings.classLoader = classLoader;
+        settings.disableTrailingSemiColon = disableTrailingSemiColon;
+        settings.injectCustomProperties = injectCustomProperties;
         return settings;
     }
 
