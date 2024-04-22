@@ -137,7 +137,7 @@ public class Settings {
     public List<Class<? extends Module>> jackson2Modules = new ArrayList<>();
     public ClassLoader classLoader = null;
     public boolean disableTrailingSemiColon = false;
-    public Map<Class<?>, List<String>> injectCustomProperties = Map.of();
+    public Map<String, List<String>> injectCustomProperties = Map.of();
 
     private boolean defaultStringEnumsOverriddenByExtension = false;
 

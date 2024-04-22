@@ -220,14 +220,14 @@ public class Emitter implements EmitterExtension.Writer {
 
         settings.injectCustomProperties
                 .keySet()
-                .stream().map(Class::getSimpleName)
-                .filter(key -> key.equals(bean.getName().getSimpleName()))
+                .stream()
+                .filter(className -> className.equals(bean.getName().getSimpleName()))
                 .findFirst().ifPresent((ignored) -> writeIndentedLine("// custom properties"));
 
         settings.injectCustomProperties
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getKey().getSimpleName().equals(bean.getName().getSimpleName()))
+                .filter(entry -> entry.getKey().equals(bean.getName().getSimpleName()))
                 .flatMap(matched -> matched.getValue().stream())
                 .forEach(this::writeIndentedLine);
     }

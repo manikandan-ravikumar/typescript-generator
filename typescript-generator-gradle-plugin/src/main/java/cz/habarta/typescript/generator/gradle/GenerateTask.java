@@ -131,7 +131,7 @@ public class GenerateTask extends DefaultTask {
     public List<String> jackson2Modules;
     public Logger.Level loggingLevel;
     public boolean disableTrailingSemiColon;
-    public Map<Class<?>, List<String>> injectCustomProperties;
+    public Map<String, List<String>> injectCustomProperties;
 
     private Settings createSettings(URLClassLoader classLoader) {
         final Settings settings = new Settings();
